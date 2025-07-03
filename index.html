@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Events Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .details-text {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>GitHub Repository Events Viewer</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Author</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="events"></tbody>
+    </table>
+
+    <script>
+        async function fetchEvents() {
+            const res = await fetch("/events");
+            const data = await res.json();
+
+            let html = "";
+            let serial = 1;
+            data.reverse().forEach(event => {
+                const author = event.author || "N/A";
+                const action = event.action || "N/A";
+                const fromBranch = event.from_branch || "-";
+                const toBranch = event.to_branch || "-";
+                const ts = new Date(event.timestamp).toUTCString();
+
+                let details = "";
+                if (action === "push") {
+                    details = `Pushed to <strong>${toBranch}</strong>`;
+                } else if (action === "pull_request") {
+                    details = `PR from <strong>${fromBranch}</strong> to <strong>${toBranch}</strong>`;
+                } else if (action === "merge") {
+                    details = `Merged <strong>${fromBranch}</strong> to <strong>${toBranch}</strong>`;
+                }
+
+                html += `
+                    <tr>
+                        <td>${serial++}</td>
+                        <td>${author}</td>
+                        <td>${action}</td>
+                        <td class="details-text">${details}</td>
+                        <td>${ts}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("events").innerHTML = html;
+        }
+
+        fetchEvents();
+        setInterval(fetchEvents, 15000);
+    </script>
+</body>
+</html>
