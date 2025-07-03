@@ -30,10 +30,12 @@ A Flask-based webhook receiver for GitHub events. It captures push, pull request
 
 ## How to Run
 
-Install dependencies:
-
-   **pip install -r requirements.txt**
-
-For runing the application:
-
-    **python app.py**
+1. Clone this `webhook-repo`.
+2. Install requirements: `pip install -r requirements.txt`.
+3. Update `app.py` with their own MongoDB URI.
+4. Install ngrok if not already installed: download from https://ngrok.com/download or `brew install ngrok` on Mac.
+5. Run Flask app: `python app.py`.
+6. Start ngrok: `ngrok http 5000` and copy the new URL.
+7. Fork the `action-repo` to their GitHub account.
+8. In their forked repo, add a new webhook using their ngrok URL with `/webhook` path and set content type to `application/json`.
+9. Commit and push to see events displayed on their UI!
