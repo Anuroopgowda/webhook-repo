@@ -1,5 +1,3 @@
-
-
 from flask import Flask, request, jsonify, send_from_directory
 from pymongo import MongoClient
 from datetime import datetime
@@ -9,7 +7,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# MongoDB connection — replace with your actual string
+# MongoDB connection — replace with your actual string if needed
 client = MongoClient("mongodb+srv://anuroop:anuroop@cluster0.r7ik2a3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["github_events"]
 collection = db["events"]
@@ -53,7 +51,8 @@ def webhook():
 
 @app.route("/events", methods=["GET"])
 def get_events():
-    events = list(collection.find({}, {"_id": 0}))
+    # Sort events by timestamp descending so newest comes first
+    events = list(collection.find({}, {"_id": 0}).sort("timestamp", -1))
     return jsonify(events)
 
 @app.route("/")
