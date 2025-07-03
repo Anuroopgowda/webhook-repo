@@ -25,7 +25,7 @@ A Flask-based webhook receiver for GitHub events. It captures push, pull request
 ## Screenshot
 
 ![1751526858762](image/README/1751526858762.png)
-!image(image/README/Screenshot 2025-07-03 190934.png)
+![new_image](image/README/new_image.png)
 ---
 
 ## How to Run
